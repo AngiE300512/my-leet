@@ -1,29 +1,31 @@
 class Solution {
     public String convert(String s, int numRows) {
-        if(numRows==1 || s.length()<numRows) return s;
+       
+		if (numRows == 1) return s;
 
-        StringBuilder sb = new StringBuilder();
-        int gap = ((numRows)*2)-2;
-        for(int i=0; i<numRows; i++){
-            if(i==0){
-                for(int j=0; j<s.length(); j+=gap) sb.append(s.charAt(j));
-            }
-            else if(i==numRows-1){
-                for(int j=i; j<s.length(); j+=gap) sb.append(s.charAt(j));
-            }
-            else{
-                int first_gap = gap - (2*i);
-                int second_gap = 2*i;
-                int j=i;
-                boolean flag=true;
-                while(j<s.length()){
-                    sb.append(s.charAt(j));
-                    if(flag) j+=first_gap;
-                    else j+=second_gap;
-                    flag=!flag;
+        StringBuilder result = new StringBuilder();
+        int cycle = 2 * (numRows - 1);
+
+        for (int row = 0; row < numRows; row++) {
+            int i = row;
+            boolean toggle = true;
+
+            while (i < s.length()) {
+                result.append(s.charAt(i));
+
+                // First and last row → fixed jump
+                if (row == 0 || row == numRows - 1) {
+                    i += cycle;
+                } else {
+                    int step1 = cycle - 2 * row; // going down
+                    int step2 = 2 * row;         // going up
+
+                    i += toggle ? step1 : step2;
+                    toggle = !toggle;
                 }
             }
         }
-        return sb.toString();
+
+        return result.toString();
     }
 }
